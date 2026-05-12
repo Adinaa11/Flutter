@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/activity_model.dart';
+
 class AddActivityPage extends StatefulWidget {
   const AddActivityPage({super.key});
 
@@ -8,11 +10,20 @@ class AddActivityPage extends StatefulWidget {
 }
 
 class _AddActivityPageState extends State<AddActivityPage> {
-  final TextEditingController keteranganController = TextEditingController();
-  final TextEditingController jarakController = TextEditingController();
-  final TextEditingController durasiController = TextEditingController();
-  final TextEditingController paceController = TextEditingController();
-  final TextEditingController catatanController = TextEditingController();
+  final TextEditingController keteranganController =
+      TextEditingController();
+
+  final TextEditingController jarakController =
+      TextEditingController();
+
+  final TextEditingController durasiController =
+      TextEditingController();
+
+  final TextEditingController paceController =
+      TextEditingController();
+
+  final TextEditingController catatanController =
+      TextEditingController();
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -24,8 +35,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
+
     if (picked != null) {
-      setState(() => selectedDate = picked);
+      setState(() {
+        selectedDate = picked;
+      });
     }
   }
 
@@ -34,24 +48,30 @@ class _AddActivityPageState extends State<AddActivityPage> {
       context: context,
       initialTime: selectedTime,
     );
+
     if (picked != null) {
-      setState(() => selectedTime = picked);
+      setState(() {
+        selectedTime = picked;
+      });
     }
   }
 
   void _saveActivity() {
-    if (keteranganController.text.isEmpty) return; // minimal validasi
-    final activity = {
-      "title": keteranganController.text,
-      "date": "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-      "time": selectedTime.format(context),
-      "distance": jarakController.text,
-      "duration": durasiController.text,
-      "pace": paceController.text,
-      "calories": "0",
-      "note": catatanController.text,
-    };
-    Navigator.pop(context, activity); // kirim data kembali ke HomePage
+    if (keteranganController.text.isEmpty) return;
+
+    final activity = ActivityModel(
+      title: keteranganController.text,
+      date:
+          "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+      time: selectedTime.format(context),
+      distance: jarakController.text,
+      duration: durasiController.text,
+      pace: paceController.text,
+      calories: "0",
+      note: catatanController.text,
+    );
+
+    Navigator.pop(context, activity);
   }
 
   @override
@@ -63,8 +83,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
         foregroundColor: Colors.black87,
         elevation: 1,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
+
         child: Column(
           children: [
             // Keterangan
@@ -72,102 +94,157 @@ class _AddActivityPageState extends State<AddActivityPage> {
               controller: keteranganController,
               decoration: InputDecoration(
                 labelText: "Keterangan",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Tanggal
             InkWell(
               onTap: pickDate,
+
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: "Tanggal",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
+
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+
                   children: [
-                    Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"),
-                    Icon(Icons.calendar_today, color: Colors.grey[600]),
+                    Text(
+                      "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                    ),
+
+                    Icon(
+                      Icons.calendar_today,
+                      color: Colors.grey[600],
+                    ),
                   ],
                 ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Waktu
             InkWell(
               onTap: pickTime,
+
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: "Waktu Mulai",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
+
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+
                   children: [
                     Text(selectedTime.format(context)),
-                    Icon(Icons.access_time, color: Colors.grey[600]),
+
+                    Icon(
+                      Icons.access_time,
+                      color: Colors.grey[600],
+                    ),
                   ],
                 ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Jarak
             TextField(
               controller: jarakController,
               keyboardType: TextInputType.number,
+
               decoration: InputDecoration(
                 labelText: "Jarak (km)",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Durasi
             TextField(
               controller: durasiController,
+
               decoration: InputDecoration(
                 labelText: "Durasi",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Pace
             TextField(
               controller: paceController,
+
               decoration: InputDecoration(
                 labelText: "Pace (menit/km)",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Catatan
             TextField(
               controller: catatanController,
+
               decoration: InputDecoration(
                 labelText: "Catatan (opsional)",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+
             const SizedBox(height: 20),
 
             // Tombol Simpan
             SizedBox(
               width: double.infinity,
+
               child: ElevatedButton(
                 onPressed: _saveActivity,
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6A3DBF),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text("Simpan", style: TextStyle(fontWeight: FontWeight.bold)),
+
+                child: const Text(
+                  "Simpan",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
