@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/activity_model.dart';
 
 class ActivityViewModel extends ChangeNotifier {
-
   final List<ActivityModel> _activities = [
-
     ActivityModel(
       title: 'Lari Pagi',
       date: '20 Juni 2025',
@@ -37,14 +35,30 @@ class ActivityViewModel extends ChangeNotifier {
       calories: '400',
       note: 'Lari sore santai',
     ),
-
   ];
 
   List<ActivityModel> get activities => _activities;
 
+  // ADD
   void addActivity(ActivityModel activity) {
     _activities.insert(0, activity);
     notifyListeners();
+  }
+
+  // DELETE
+  void deleteActivity(ActivityModel activity) {
+    _activities.remove(activity);
+    notifyListeners();
+  }
+
+  // UPDATE
+  void updateActivity(ActivityModel oldActivity, ActivityModel newActivity) {
+    final index = _activities.indexOf(oldActivity);
+
+    if (index != -1) {
+      _activities[index] = newActivity;
+      notifyListeners();
+    }
   }
 
   ActivityModel createActivity({
@@ -56,7 +70,6 @@ class ActivityViewModel extends ChangeNotifier {
     required String pace,
     String? note,
   }) {
-
     return ActivityModel(
       title: title,
       date: date,

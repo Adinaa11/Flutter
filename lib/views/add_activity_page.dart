@@ -3,30 +3,43 @@ import 'package:flutter/material.dart';
 import '../models/activity_model.dart';
 
 class AddActivityPage extends StatefulWidget {
-  const AddActivityPage({super.key});
+  final ActivityModel? activity;
+
+  const AddActivityPage({super.key, this.activity});
 
   @override
   State<AddActivityPage> createState() => _AddActivityPageState();
 }
 
 class _AddActivityPageState extends State<AddActivityPage> {
-  final TextEditingController keteranganController =
-      TextEditingController();
+  final TextEditingController keteranganController = TextEditingController();
 
-  final TextEditingController jarakController =
-      TextEditingController();
+  final TextEditingController jarakController = TextEditingController();
 
-  final TextEditingController durasiController =
-      TextEditingController();
+  final TextEditingController durasiController = TextEditingController();
 
-  final TextEditingController paceController =
-      TextEditingController();
+  final TextEditingController paceController = TextEditingController();
 
-  final TextEditingController catatanController =
-      TextEditingController();
+  final TextEditingController catatanController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // JIKA MODE EDIT
+    if (widget.activity != null) {
+      final act = widget.activity!;
+
+      keteranganController.text = act.title;
+      jarakController.text = act.distance;
+      durasiController.text = act.duration;
+      paceController.text = act.pace;
+      catatanController.text = act.note ?? "";
+    }
+  }
 
   Future<void> pickDate() async {
     final DateTime? picked = await showDatePicker(
@@ -61,13 +74,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
     final activity = ActivityModel(
       title: keteranganController.text,
-      date:
-          "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+
+      date: "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+
       time: selectedTime.format(context),
+
       distance: jarakController.text,
+
       duration: durasiController.text,
+
       pace: paceController.text,
+
       calories: "0",
+
       note: catatanController.text,
     );
 
@@ -76,9 +95,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.activity != null;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tambah Aktivitas"),
+        title: Text(isEdit ? "Edit Aktivitas" : "Tambah Aktivitas"),
+
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 1,
@@ -89,11 +111,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
         child: Column(
           children: [
-            // Keterangan
             TextField(
               controller: keteranganController,
+
               decoration: InputDecoration(
                 labelText: "Keterangan",
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -102,31 +125,27 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Tanggal
             InkWell(
               onTap: pickDate,
 
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: "Tanggal",
+
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
 
                 child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                   children: [
                     Text(
                       "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                     ),
 
-                    Icon(
-                      Icons.calendar_today,
-                      color: Colors.grey[600],
-                    ),
+                    Icon(Icons.calendar_today, color: Colors.grey[600]),
                   ],
                 ),
               ),
@@ -134,29 +153,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Waktu
             InkWell(
               onTap: pickTime,
 
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: "Waktu Mulai",
+
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
 
                 child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                   children: [
                     Text(selectedTime.format(context)),
 
-                    Icon(
-                      Icons.access_time,
-                      color: Colors.grey[600],
-                    ),
+                    Icon(Icons.access_time, color: Colors.grey[600]),
                   ],
                 ),
               ),
@@ -164,13 +179,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Jarak
             TextField(
               controller: jarakController,
               keyboardType: TextInputType.number,
 
               decoration: InputDecoration(
                 labelText: "Jarak (km)",
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -179,12 +194,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Durasi
             TextField(
               controller: durasiController,
 
               decoration: InputDecoration(
                 labelText: "Durasi",
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -193,12 +208,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Pace
             TextField(
               controller: paceController,
 
               decoration: InputDecoration(
                 labelText: "Pace (menit/km)",
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -207,12 +222,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            // Catatan
             TextField(
               controller: catatanController,
 
               decoration: InputDecoration(
                 labelText: "Catatan (opsional)",
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -221,7 +236,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 20),
 
-            // Tombol Simpan
             SizedBox(
               width: double.infinity,
 
@@ -230,20 +244,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6A3DBF),
+
                   foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 14),
+
+                  padding: const EdgeInsets.symmetric(vertical: 14),
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
 
-                child: const Text(
-                  "Simpan",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Text(
+                  isEdit ? "Update" : "Simpan",
+
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
