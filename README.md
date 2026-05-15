@@ -1,17 +1,42 @@
-# catat_lari
+# 📱 STRIDE – Aplikasi Pencatatan Aktivitas Lari
 
-A new Flutter project.
+## 👥 Pembuat
+- Nayla Sifa'ul Qolbi – 24082010047
+- Genduk Nurul Aini – 24082010055
+- Adina Nur Afida – 24082010057
+- Rosalinda Eka Hernalia – 24082010069
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📖 Deskripsi Aplikasi
+**STRIDE** adalah aplikasi Android berbasis **Flutter** untuk mencatat aktivitas lari.  
+Pengguna dapat menambahkan, melihat, mengedit, dan menghapus aktivitas lari, termasuk tanggal, jarak, durasi, kalori, pace, dan catatan.  
 
-A few resources to get you started if this is your first Flutter project:
+Statistik harian atau mingguan ditampilkan di dashboard sehingga progress lari bisa dipantau dengan mudah.  
+Data disimpan lokal di **ViewModel** menggunakan List, fokus pada fungsionalitas aplikasi dan arsitektur **MVVM**.  
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ✨ Fitur Aplikasi
+- **🔐 Login & Register** – Autentikasi pengguna  
+- **➕ Tambah Aktivitas (Create)** – Input data aktivitas lari  
+- **📋 Lihat Aktivitas (Read)** – Daftar aktivitas terbaru  
+- **✏️ Edit Aktivitas (Update)** – Mengubah data aktivitas  
+- **🗑️ Hapus Aktivitas (Delete)** – Menghapus aktivitas yang ada  
+- **📊 Statistik Dinamis** – Total jarak, durasi, kalori, dan jumlah aktivitas, tampil di statCard  
+
+---
+
+## 🛠️ Tech Stack
+- Flutter & Dart  
+- Provider (state management)  
+- MVVM Architecture  
+- Material Design  
+
+---
+
+## 🎯 Tujuan Aplikasi
+- Membantu pengguna mencatat aktivitas olahraga lari  
+- Menyimpan riwayat aktivitas secara rapi dan mudah diakses  
+- Memudahkan pengguna memantau progress mingguan  
+- Menerapkan arsitektur MVVM di Flutter  
