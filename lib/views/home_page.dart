@@ -130,42 +130,44 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 12),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Consumer<ActivityViewModel>(
+                builder: (context, vm, child) {
+                  final stats = vm.computeStats();
 
-                children: [
-                  _statCard(
-                    "Jarak",
-                    "37.7",
-                    "km",
-                    Colors.purple,
-                    Icons.directions_run,
-                  ),
-
-                  _statCard(
-                    "Durasi",
-                    "3:47:50",
-                    "jam",
-                    Colors.blue,
-                    Icons.access_time,
-                  ),
-
-                  _statCard(
-                    "Kalori",
-                    "2.560",
-                    "kcal",
-                    Colors.orange,
-                    Icons.local_fire_department,
-                  ),
-
-                  _statCard(
-                    "Aktivitas",
-                    "3",
-                    "kali",
-                    Colors.green,
-                    Icons.show_chart,
-                  ),
-                ],
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _statCard(
+                        "Jarak",
+                        "${stats['totalDistance']}",
+                        "km",
+                        Colors.purple,
+                        Icons.directions_run,
+                      ),
+                      _statCard(
+                        "Durasi",
+                        stats['totalDuration'],
+                        "jam",
+                        Colors.blue,
+                        Icons.access_time,
+                      ),
+                      _statCard(
+                        "Kalori",
+                        "${stats['totalCalories']}",
+                        "kcal",
+                        Colors.orange,
+                        Icons.local_fire_department,
+                      ),
+                      _statCard(
+                        "Aktivitas",
+                        "${stats['totalActivities']}",
+                        "kali",
+                        Colors.green,
+                        Icons.show_chart,
+                      ),
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: 20),
@@ -267,7 +269,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(16),
       ),
 
-      width: 80,
+      width: 85,
 
       child: Column(
         children: [
