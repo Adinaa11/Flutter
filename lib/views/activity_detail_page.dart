@@ -43,6 +43,13 @@ class ActivityDetailPage extends StatelessWidget {
                   listen: false,
                 ).updateActivity(activity, updatedActivity);
 
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Aktivitas berhasil diupdate"),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+
                 Navigator.pop(context);
               }
             },
@@ -50,15 +57,61 @@ class ActivityDetailPage extends StatelessWidget {
             icon: const Icon(Icons.edit, color: Colors.black87),
           ),
 
-          // DELETE
+          // DELETE + KONFIRMASI
           IconButton(
-            onPressed: () {
-              Provider.of<ActivityViewModel>(
-                context,
-                listen: false,
-              ).deleteActivity(activity);
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
 
-              Navigator.pop(context);
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Hapus Aktivitas"),
+
+                    content: const Text(
+                      "Apakah kamu yakin ingin menghapus aktivitas ini?",
+                    ),
+
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+
+                        child: const Text("Batal"),
+                      ),
+
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+
+                        child: const Text("Hapus"),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (confirm == true) {
+                Provider.of<ActivityViewModel>(
+                  context,
+                  listen: false,
+                ).deleteActivity(activity);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Aktivitas berhasil dihapus"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+
+                Navigator.pop(context);
+              }
             },
 
             icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -295,7 +348,7 @@ class ActivityDetailPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // BUTTON EDIT & DELETE
+            // BUTTON EDIT & DELETE BAWAH
             Row(
               children: [
                 Expanded(
@@ -314,6 +367,13 @@ class ActivityDetailPage extends StatelessWidget {
                           context,
                           listen: false,
                         ).updateActivity(activity, updatedActivity);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Aktivitas berhasil diupdate"),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
 
                         Navigator.pop(context);
                       }
@@ -341,13 +401,59 @@ class ActivityDetailPage extends StatelessWidget {
 
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      Provider.of<ActivityViewModel>(
-                        context,
-                        listen: false,
-                      ).deleteActivity(activity);
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
 
-                      Navigator.pop(context);
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Hapus Aktivitas"),
+
+                            content: const Text(
+                              "Apakah kamu yakin ingin menghapus aktivitas ini?",
+                            ),
+
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+
+                                child: const Text("Batal"),
+                              ),
+
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                ),
+
+                                child: const Text("Hapus"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (confirm == true) {
+                        Provider.of<ActivityViewModel>(
+                          context,
+                          listen: false,
+                        ).deleteActivity(activity);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Aktivitas berhasil dihapus"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+
+                        Navigator.pop(context);
+                      }
                     },
 
                     icon: const Icon(Icons.delete),

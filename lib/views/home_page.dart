@@ -40,6 +40,14 @@ class _HomePageState extends State<HomePage> {
         context,
         listen: false,
       ).addActivity(newActivity);
+
+      // NOTIFIKASI BERHASIL TAMBAH
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Aktivitas berhasil ditambahkan"),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
 
     setState(() {
