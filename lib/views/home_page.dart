@@ -11,10 +11,7 @@ import 'profile_page.dart';
 class HomePage extends StatefulWidget {
   final String userEmail;
 
-  const HomePage({
-    super.key,
-    required this.userEmail,
-  });
+  const HomePage({super.key, required this.userEmail});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,12 +29,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onAddPressed() async {
-    await Navigator.push(
+    final newActivity = await Navigator.push<ActivityModel>(
       context,
-      MaterialPageRoute(
-        builder: (context) => const AddActivityPage(),
-      ),
+
+      MaterialPageRoute(builder: (context) => const AddActivityPage()),
     );
+
+    if (newActivity != null) {
+      Provider.of<ActivityViewModel>(
+        context,
+        listen: false,
+      ).addActivity(newActivity);
+
+      // NOTIFIKASI BERHASIL TAMBAH
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Aktivitas berhasil ditambahkan"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
 
     setState(() {
       _isFabActive = true;
@@ -61,8 +72,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Header
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                 children: [
                   CircleAvatar(
@@ -71,9 +81,7 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       widget.userEmail[0].toUpperCase(),
 
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
 
@@ -104,9 +112,7 @@ class _HomePageState extends State<HomePage> {
               const Text(
                 "Siap untuk lari hari ini? 💪",
 
-                style: TextStyle(
-                  color: Colors.black54,
-                ),
+                style: TextStyle(color: Colors.black54),
               ),
 
               const SizedBox(height: 20),
@@ -125,8 +131,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 12),
 
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                 children: [
                   _statCard(
@@ -192,17 +197,14 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else if (_selectedIndex == 1) {
-      bodyContent = ProfilePage(
-        userEmail: widget.userEmail,
-      );
+      bodyContent = ProfilePage(userEmail: widget.userEmail);
     }
 
     return Scaffold(
       backgroundColor: backgroundColor,
       body: bodyContent,
 
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       floatingActionButton: FloatingActionButton(
         onPressed: _onAddPressed,
@@ -220,17 +222,14 @@ class _HomePageState extends State<HomePage> {
         color: backgroundColor,
 
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
 
           children: [
             IconButton(
               icon: Icon(
                 Icons.home,
 
-                color: _selectedIndex == 0
-                    ? Colors.orange
-                    : Colors.black87,
+                color: _selectedIndex == 0 ? Colors.orange : Colors.black87,
               ),
 
               onPressed: () => _onTabSelected(0),
@@ -242,9 +241,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(
                 Icons.person,
 
-                color: _selectedIndex == 1
-                    ? Colors.orange
-                    : Colors.black87,
+                color: _selectedIndex == 1 ? Colors.orange : Colors.black87,
               ),
 
               onPressed: () => _onTabSelected(1),
@@ -281,30 +278,14 @@ class _HomePageState extends State<HomePage> {
           Text(
             title,
 
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
           ),
 
           const SizedBox(height: 4),
 
-          Text(
-            value,
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
 
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          Text(
-            unit,
-
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-            ),
-          ),
+          Text(unit, style: TextStyle(color: color, fontSize: 10)),
         ],
       ),
     );
@@ -316,11 +297,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
 
-          MaterialPageRoute(
-            builder: (_) => ActivityDetailPage(
-              activity: act,
-            ),
-          ),
+          MaterialPageRoute(builder: (_) => ActivityDetailPage(activity: act)),
         );
       },
 
@@ -344,21 +321,16 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor:
-                  Colors.deepPurple.withOpacity(0.2),
+              backgroundColor: Colors.deepPurple.withOpacity(0.2),
 
-              child: const Icon(
-                Icons.directions_run,
-                color: Colors.deepPurple,
-              ),
+              child: const Icon(Icons.directions_run, color: Colors.deepPurple),
             ),
 
             const SizedBox(width: 12),
 
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
                   Text(
@@ -375,26 +347,20 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     "${act.date} • ${act.time}",
 
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 12,
-                    ),
+                    style: const TextStyle(color: Colors.black54, fontSize: 12),
                   ),
                 ],
               ),
             ),
 
             Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
 
               children: [
                 Text(
                   act.distance,
 
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 4),
@@ -402,10 +368,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   "${act.duration} • ${act.pace}",
 
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
                 ),
               ],
             ),

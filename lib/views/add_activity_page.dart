@@ -16,28 +16,46 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   final TextEditingController jarakController = TextEditingController();
 
-  final TextEditingController durasiController = TextEditingController();
+  final TextEditingController jamController = TextEditingController();
+
+  final TextEditingController menitController = TextEditingController();
+
+  final TextEditingController detikController = TextEditingController();
 
   final TextEditingController paceController = TextEditingController();
 
   final TextEditingController catatanController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
+
   TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   void initState() {
     super.initState();
 
-    // JIKA MODE EDIT
+    // MODE EDIT
     if (widget.activity != null) {
       final act = widget.activity!;
 
       keteranganController.text = act.title;
-      jarakController.text = act.distance;
-      durasiController.text = act.duration;
-      paceController.text = act.pace;
+
+      jarakController.text = act.distance.replaceAll(" km", "");
+
+      paceController.text = act.pace.replaceAll("'00\"/km", "");
+
       catatanController.text = act.note ?? "";
+
+      // SPLIT DURASI
+      final durationParts = act.duration.split(":");
+
+      if (durationParts.length == 3) {
+        jamController.text = durationParts[0];
+
+        menitController.text = durationParts[1];
+
+        detikController.text = durationParts[2];
+      }
     }
   }
 
@@ -72,6 +90,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
   void _saveActivity() {
     if (keteranganController.text.isEmpty) return;
 
+    final duration =
+        "${jamController.text.padLeft(2, '0')}:"
+        "${menitController.text.padLeft(2, '0')}:"
+        "${detikController.text.padLeft(2, '0')}";
+
     final activity = ActivityModel(
       title: keteranganController.text,
 
@@ -79,11 +102,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
       time: selectedTime.format(context),
 
-      distance: jarakController.text,
+      distance: "${jarakController.text} km",
 
-      duration: durasiController.text,
+      duration: duration,
 
-      pace: paceController.text,
+      pace: "${paceController.text}'00\"/km",
 
       calories: "0",
 
@@ -102,7 +125,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
         title: Text(isEdit ? "Edit Aktivitas" : "Tambah Aktivitas"),
 
         backgroundColor: Colors.white,
+
         foregroundColor: Colors.black87,
+
         elevation: 1,
       ),
 
@@ -111,6 +136,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
         child: Column(
           children: [
+            // KETERANGAN
             TextField(
               controller: keteranganController,
 
@@ -125,6 +151,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
+            // TANGGAL
             InkWell(
               onTap: pickDate,
 
@@ -153,6 +180,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
+            // WAKTU
             InkWell(
               onTap: pickTime,
 
@@ -179,8 +207,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
+            // JARAK
             TextField(
               controller: jarakController,
+
               keyboardType: TextInputType.number,
 
               decoration: InputDecoration(
@@ -194,22 +224,70 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
-            TextField(
-              controller: durasiController,
+            // DURASI
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: jamController,
 
-              decoration: InputDecoration(
-                labelText: "Durasi",
+                    keyboardType: TextInputType.number,
 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                    decoration: InputDecoration(
+                      labelText: "Jam",
+
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: TextField(
+                    controller: menitController,
+
+                    keyboardType: TextInputType.number,
+
+                    decoration: InputDecoration(
+                      labelText: "Menit",
+
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: TextField(
+                    controller: detikController,
+
+                    keyboardType: TextInputType.number,
+
+                    decoration: InputDecoration(
+                      labelText: "Detik",
+
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 12),
 
+            // PACE
             TextField(
               controller: paceController,
+
+              keyboardType: TextInputType.number,
 
               decoration: InputDecoration(
                 labelText: "Pace (menit/km)",
@@ -222,6 +300,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 12),
 
+            // CATATAN
             TextField(
               controller: catatanController,
 
@@ -236,6 +315,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
             const SizedBox(height: 20),
 
+            // BUTTON
             SizedBox(
               width: double.infinity,
 
