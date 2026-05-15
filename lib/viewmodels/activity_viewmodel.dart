@@ -81,4 +81,43 @@ class ActivityViewModel extends ChangeNotifier {
       note: note,
     );
   }
+
+  // =======================
+  // Statistik Dinamis
+  // =======================
+  Map<String, dynamic> computeStats() {
+    double totalDistance = 0;
+    int totalSeconds = 0;
+    int totalCalories = 0;
+
+    for (var act in _activities) {
+      totalDistance += double.tryParse(act.distance.replaceAll(" km", "")) ?? 0;
+
+      final parts = act.duration
+          .split(":")
+          .map((e) => int.tryParse(e) ?? 0)
+          .toList();
+      if (parts.length == 3) {
+        totalSeconds += parts[0] * 3600 + parts[1] * 60 + parts[2];
+      }
+
+      totalCalories += int.tryParse(act.calories.replaceAll(".", "")) ?? 0;
+    }
+
+    String totalDuration =
+        "${(totalSeconds ~/ 3600).toString().padLeft(2, '0')}:"
+        "${((totalSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:"
+        "${(totalSeconds % 60).toString().padLeft(2, '0')}";
+    double pace = totalDistance > 0
+        ? totalSeconds / 60 / totalDistance
+        : 0; // menit per km
+
+    return {
+      "totalDistance": totalDistance.toStringAsFixed(1),
+      "totalDuration": totalDuration,
+      "averagePace": pace.toStringAsFixed(2),
+      "totalCalories": totalCalories,
+      "totalActivities": _activities.length,
+    };
+  }
 }
