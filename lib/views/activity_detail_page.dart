@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../models/activity_model.dart';
+import '../viewmodels/activity_viewmodel.dart';
+import 'add_activity_page.dart';
 
 class ActivityDetailPage extends StatelessWidget {
   final ActivityModel activity;
 
-  const ActivityDetailPage({
-    super.key,
-    required this.activity,
-  });
+  const ActivityDetailPage({super.key, required this.activity});
 
   @override
   Widget build(BuildContext context) {
@@ -21,27 +22,46 @@ class ActivityDetailPage extends StatelessWidget {
 
         title: const Text(
           "Detail Aktivitas",
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
 
         actions: [
+          // EDIT
           IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.black87,
-            ),
+            onPressed: () async {
+              final updatedActivity = await Navigator.push(
+                context,
+
+                MaterialPageRoute(
+                  builder: (_) => AddActivityPage(activity: activity),
+                ),
+              );
+
+              if (updatedActivity != null) {
+                Provider.of<ActivityViewModel>(
+                  context,
+                  listen: false,
+                ).updateActivity(activity, updatedActivity);
+
+                Navigator.pop(context);
+              }
+            },
+
+            icon: const Icon(Icons.edit, color: Colors.black87),
           ),
 
+          // DELETE
           IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.delete_outline,
-              color: Colors.red,
-            ),
+            onPressed: () {
+              Provider.of<ActivityViewModel>(
+                context,
+                listen: false,
+              ).deleteActivity(activity);
+
+              Navigator.pop(context);
+            },
+
+            icon: const Icon(Icons.delete_outline, color: Colors.red),
           ),
 
           const SizedBox(width: 8),
@@ -53,7 +73,7 @@ class ActivityDetailPage extends StatelessWidget {
 
         child: Column(
           children: [
-            // Header Card
+            // HEADER CARD
             Container(
               padding: const EdgeInsets.all(20),
 
@@ -84,8 +104,7 @@ class ActivityDetailPage extends StatelessWidget {
 
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
                         Text(
@@ -112,9 +131,8 @@ class ActivityDetailPage extends StatelessWidget {
 
                             Text(
                               activity.date,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                              ),
+
+                              style: const TextStyle(color: Colors.white70),
                             ),
 
                             const SizedBox(width: 12),
@@ -129,9 +147,8 @@ class ActivityDetailPage extends StatelessWidget {
 
                             Text(
                               activity.time,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                              ),
+
+                              style: const TextStyle(color: Colors.white70),
                             ),
                           ],
                         ),
@@ -165,7 +182,7 @@ class ActivityDetailPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Ringkasan
+            // RINGKASAN
             const Align(
               alignment: Alignment.centerLeft,
 
@@ -193,8 +210,7 @@ class ActivityDetailPage extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                     children: [
                       _StatItem(
@@ -218,8 +234,7 @@ class ActivityDetailPage extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                     children: [
                       _StatItem(
@@ -231,8 +246,7 @@ class ActivityDetailPage extends StatelessWidget {
                       ),
 
                       _StatItem(
-                        icon:
-                            Icons.local_fire_department_rounded,
+                        icon: Icons.local_fire_department_rounded,
                         title: "Kalori",
                         value: activity.calories,
                         unit: "kcal",
@@ -246,7 +260,7 @@ class ActivityDetailPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Catatan
+            // CATATAN
             const Align(
               alignment: Alignment.centerLeft,
 
@@ -273,39 +287,51 @@ class ActivityDetailPage extends StatelessWidget {
               ),
 
               child: Text(
-                activity.note ??
-                    "Tidak ada catatan tambahan.",
+                activity.note ?? "Tidak ada catatan tambahan.",
 
-                style: const TextStyle(
-                  color: Colors.black54,
-                ),
+                style: const TextStyle(color: Colors.black54),
               ),
             ),
 
             const SizedBox(height: 24),
 
-            // Tombol Edit & Hapus
+            // BUTTON EDIT & DELETE
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final updatedActivity = await Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (_) => AddActivityPage(activity: activity),
+                        ),
+                      );
+
+                      if (updatedActivity != null) {
+                        Provider.of<ActivityViewModel>(
+                          context,
+                          listen: false,
+                        ).updateActivity(activity, updatedActivity);
+
+                        Navigator.pop(context);
+                      }
+                    },
 
                     icon: const Icon(Icons.edit),
 
                     label: const Text("Edit"),
 
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(0xFF6A3DBF),
+                      backgroundColor: const Color(0xFF6A3DBF),
+
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14,
-                      ),
+
+                      padding: const EdgeInsets.symmetric(vertical: 14),
 
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                   ),
@@ -315,7 +341,14 @@ class ActivityDetailPage extends StatelessWidget {
 
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<ActivityViewModel>(
+                        context,
+                        listen: false,
+                      ).deleteActivity(activity);
+
+                      Navigator.pop(context);
+                    },
 
                     icon: const Icon(Icons.delete),
 
@@ -324,13 +357,11 @@ class ActivityDetailPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14,
-                      ),
+
+                      padding: const EdgeInsets.symmetric(vertical: 14),
 
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                   ),
@@ -367,11 +398,7 @@ class _StatItem extends StatelessWidget {
           radius: 28,
           backgroundColor: color.withOpacity(0.15),
 
-          child: Icon(
-            icon,
-            color: color,
-            size: 28,
-          ),
+          child: Icon(icon, color: color, size: 28),
         ),
 
         const SizedBox(height: 8),
@@ -380,9 +407,7 @@ class _StatItem extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
 
-          style: const TextStyle(
-            color: Colors.black54,
-          ),
+          style: const TextStyle(color: Colors.black54),
         ),
 
         const SizedBox(height: 4),
@@ -400,10 +425,7 @@ class _StatItem extends StatelessWidget {
         Text(
           unit,
 
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: color, fontWeight: FontWeight.bold),
         ),
       ],
     );
