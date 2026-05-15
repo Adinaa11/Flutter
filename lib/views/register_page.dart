@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'login_page.dart';
 
-import '../viewmodels/login_viewmodel.dart';
-import 'home_page.dart';
-import 'register_page.dart';
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  bool _obscureText = true; 
-  bool _rememberMe = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
 
-  void _login() {
-    final vm = Provider.of<LoginViewModel>(context, listen: false);
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      // TODO: implement register logic (API call or local storage)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Registrasi berhasil! Silakan login.")),
+      );
 
-    final success = vm.login(_formKey);
-
-    if (success) {
-      // Bisa tambah simpan email/password di SharedPreferences jika _rememberMe true
+      // Kembali ke login page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) =>
-              HomePage(userEmail: emailController.text),
-        ),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     }
   }
@@ -73,31 +69,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      "STRIDE",
+                      "Daftar Akun",
                       style: TextStyle(
-                        fontSize: 34,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 3,
                         color: Color(0xFF6A3DBF),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Welcome Back!",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 30),
 
-                    // TextFormField Email
+                    // Email
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.email),
-                        hintText: "Email or Username",
+                        hintText: "Email",
                         filled: true,
                         fillColor: const Color(0xFFF5F4FF),
                         border: OutlineInputBorder(
@@ -108,13 +94,12 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (val) =>
                           val!.isEmpty ? "Masukkan email" : null,
                     ),
-
                     const SizedBox(height: 16),
 
-                    // TextFormField Password dengan Show/Hide
+                    // Password
                     TextFormField(
                       controller: passwordController,
-                      obscureText: _obscureText,
+                      obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.lock),
                         hintText: "Password",
@@ -126,14 +111,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscureText
+                            _obscurePassword
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             color: Colors.grey,
                           ),
                           onPressed: () {
                             setState(() {
-                              _obscureText = !_obscureText;
+                              _obscurePassword = !_obscurePassword;
                             });
                           },
                         ),
@@ -141,32 +126,49 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (val) =>
                           val!.isEmpty ? "Masukkan password" : null,
                     ),
+                    const SizedBox(height: 16),
 
-                    const SizedBox(height: 12),
-
-                    // Checkbox "Ingat Password"
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _rememberMe,
-                          onChanged: (bool? value) {
+                    // Konfirmasi Password
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      obscureText: _obscureConfirm,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.lock),
+                        hintText: "Konfirmasi Password",
+                        filled: true,
+                        fillColor: const Color(0xFFF5F4FF),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirm
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
                             setState(() {
-                              _rememberMe = value!;
+                              _obscureConfirm = !_obscureConfirm;
                             });
                           },
                         ),
-                        const Text("Ingat Password"),
-                      ],
+                      ),
+                      validator: (val) {
+                        if (val!.isEmpty) return "Masukkan konfirmasi password";
+                        if (val != passwordController.text) return "Password tidak sama";
+                        return null;
+                      },
                     ),
-
                     const SizedBox(height: 26),
 
-                    // Tombol Login
+                    // Tombol Daftar
                     SizedBox(
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: _login,
+                        onPressed: _register,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6A3DBF),
                           foregroundColor: Colors.white,
@@ -175,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         child: const Text(
-                          "Masuk",
+                          "Daftar",
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -186,22 +188,21 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 16),
 
-                    // ===== Tambahkan Link Register =====
+                    // Link Kembali ke Login
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Belum punya akun? "),
+                        const Text("Sudah punya akun? "),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const RegisterPage(),
-                              ),
+                                  builder: (context) => const LoginPage()),
                             );
                           },
                           child: const Text(
-                            "Daftar",
+                            "Login",
                             style: TextStyle(
                               color: Color(0xFF6A3DBF),
                               fontWeight: FontWeight.bold,
